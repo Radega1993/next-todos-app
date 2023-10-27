@@ -16,3 +16,17 @@ export const toggleTodo = async( id: string, complete: boolean ): Promise<Todo> 
 
     return updatedTodo;
 }
+
+export const createTodo = async( description: string ): Promise<Todo> => {
+    const todo = await prisma.todo.create({data: { description } })
+    revalidatePath('/dashboard/server-todos');
+
+    return todo;
+}
+
+export const deleteCompleted = async( ) => {
+
+    await prisma.todo.deleteMany({where: { complete: true } });
+    revalidatePath('/dashboard/server-todos');
+
+}
